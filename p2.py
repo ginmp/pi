@@ -145,7 +145,7 @@ def main():
     data,kernel = get_data(x,y, kx,ky, new_data)
     rectangles = get_all_rectangles(data,kernel)
     unique_rectangles = get_unique_rectangles(rectangles)
-    show(data,unique_rectangles)
+    show(data,unique_rectangles, width, height)
 
 if __name__ == "__main__":
     main()
