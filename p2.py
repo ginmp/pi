@@ -12,6 +12,18 @@ class Rectangle():
     
     def get_y(self):
         return self.__y
+    
+    def __collision(self, values0, values1):
+        for v0 in range(values0[0], values0[1]):
+                if v0 in range(values1[0], values1[1]):
+                    return True
+        return False
+    
+    def collision_x(self, other):
+        return self.__collision(self.__x, other.__x)
+    
+    def collision_y(self, other):
+        return self.__collision(self.__y, other.__y)
 
     def __repr__(self):
         return "\t x:{} \t y:{} \n".format(self.__x, self.__y)
@@ -24,40 +36,35 @@ def get_all_rectangles(data, kernel):
     for i in range(data.shape[0]):
         for j in range(data.shape[1]):
             if i <= data.shape[0] - kernel.shape[0]:
-                i_final = i + kernel.shape[0]
+                i_end = i + kernel.shape[0]
             else:
-                i_final = 0
+                i_end = 0
             if j <= data.shape[1] - kernel.shape[1]:
-                j_final = j + kernel.shape[1]
+                j_end = j + kernel.shape[1]
             else:
-                j_final = 0
+                j_end = 0
             
-            if i_final == 0 or j_final == 0:
+            if i_end == 0 or j_end == 0:
                 break
-            mult = data[i:i_final, j:j_final] * kernel
+            mult = data[i:i_end, j:j_end] * kernel
             mean = np.mean(mult)
 
             if mean == 1.0:
-                x = [i,i_final]
-                y = [j,j_final]
+                x = (i,i_end)
+                y = (j,j_end)
                 rectangles.append(Rectangle(x , y))
     return rectangles
 
-def collision(values0, values1):
-    for v0 in range(values0[0], values0[1]):
-            if v0 in range(values1[0], values1[1]):
-                return True
-    return False
 
 def get_unique_rectangles(rectangles):
     unique_rectangles = []
     for rect0 in rectangles:
         col = False
         for rect1 in unique_rectangles:
-            x0inx1 = collision(rect0.get_x(), rect1.get_x())
-            y0iny1 = collision(rect0.get_y(), rect1.get_y())
+            col_x = rect0.collision_x(rect1)
+            col_y = rect0.collision_y(rect1)
 
-            col = x0inx1 and y0iny1
+            col = col_x and col_y
 
             if col:
                 break        
